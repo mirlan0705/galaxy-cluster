@@ -21,14 +21,12 @@ class SimulationConfig:
     seed: int
     softening: float
 
-def run_single_particle_demo():
-    x = 0.0
-    v = 1.0
-    dt = 0.1
-
-    for step in range(10):
-        x = x + v * dt
-        print(f"step {step}: x = {x}")
-
-if __name__ == "__main__":
-    run_single_particle_demo()
+def gravity_from_body(target: Body, source: Body, g: float, softening: float):
+    dx = source.x - target.x
+    dy = source.y - target.y
+    dz = source.z - target.z
+    r2 = dx * dx + dy * dy + dz * dz + softening * softening
+    inv_r = 1.0 / math.sqrt(r2)
+    inv_r3 = inv_r * inv_r * inv_r
+    scale = g * source.mass * inv_r3
+    return dx * scale, dy * scale, dz * scale
